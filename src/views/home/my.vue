@@ -173,7 +173,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped="scope">
 .el-carousel__item {
   background-color: #eee;
   height: 250px;
@@ -183,5 +183,7 @@ export default {
 }
 .operate {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 </style>

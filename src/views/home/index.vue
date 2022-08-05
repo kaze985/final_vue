@@ -16,7 +16,7 @@
       <el-container>
         <!-- 侧边栏 -->
         <el-aside>
-          <el-menu class="el-menu-vertical-demo" router >
+          <el-menu class="el-menu-vertical-demo" router>
             <el-menu-item index="item">
               <i class="el-icon-menu"></i>
               <span slot="title">物品列表</span>
@@ -32,10 +32,12 @@
               <span slot="title">上传物品</span>
             </el-menu-item>
 
-            <el-menu-item index="message">
-              <i class="el-icon-bell"></i>
-              <span slot="title">我的消息</span>
-            </el-menu-item>
+            <el-badge :value="unReadMessage.length" class="item" type="primary" :hidden="unReadMessage.length == 0">
+              <el-menu-item index="message">
+                <i class="el-icon-bell"></i>
+                <span slot="title">我的消息</span>
+              </el-menu-item>
+            </el-badge>
           </el-menu>
         </el-aside>
 
@@ -49,16 +51,30 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
       userInfo: null,
       menuList: [],
       isCollapse: false,
+      wsUrl: 'ws://127.0.0.1:8084/websocket/', // ws地址
+      websock: null, // ws实例
+      unReadMessage: unReadMessage,
     }
   },
   created() {
     this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    this.initWebSocket()
+  },
+  destroyed() {
+    // 离开路由之后断开websocket连接
+    this.websock.close()
+  },
+  provide() {
+    return {
+      websocketsend: this.websocketsend,
+    }
   },
   methods: {
     // 退出登录
@@ -87,9 +103,43 @@ export default {
           })
         })
     },
-    // 获取activeName
+    initWebSocket() {
+      this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+      let socketUrl = this.wsUrl + this.userInfo.id
+      if (typeof WebSocket === 'undefined') return console.log('您的浏览器不支持websocket')
+      this.websock = new WebSocket(socketUrl)
+      this.websock.onmessage = this.websocketonmessage
+      this.websock.onopen = this.websocketonopen
+      this.websock.onerror = this.websocketonerror
+      this.websock.onclose = this.websocketclose
+    },
+    websocketonopen() {
+      console.log('建立连接成功')
+    },
+    websocketonerror() {
+      // 连接建立失败重连
+      console.log('出现错误')
+      this.initWebSocket()
+    },
+    websocketonmessage(res) {
+      // 数据接收
+      const redata = JSON.parse(res.data)
+      if (redata.type == 'notice') {
+        unReadMessage.push(redata)
+      }
+    },
+    websocketsend(Data) {
+      console.log('调用发送数据')
+      // 数据发送
+      this.websock.send(Data)
+    },
+    websocketclose(e) {
+      // 关闭
+      console.log('断开连接', e)
+    },
   },
 }
+export let unReadMessage = []
 </script>
 
 <style lang="scss">
@@ -103,6 +153,7 @@ export default {
 
 .el-main {
   height: 100%;
+  background: #eaedf1;
 }
 
 .el-header {
@@ -147,9 +198,10 @@ export default {
     text-align: left;
     height: auto;
     border-right: 0;
+    width: 280px;
   }
 }
-.el-main {
-  background: #eaedf1;
+.el-badge {
+  width: 100%;
 }
 </style>

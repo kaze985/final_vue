@@ -68,10 +68,10 @@
       <div class="exchangeableItem">
         <hr />
         <h3>可用于交换的物品</h3>
-        <el-table :data="exchangeableItems" stripe border style="width: 100%" >
+        <el-table :data="exchangeableItems" stripe border style="width: 100%">
           <el-table-column label="名称" prop="name" align="center"> </el-table-column>
           <el-table-column label="价格" prop="value" align="center"> </el-table-column>
-          <el-table-column label="操作"  align="center"> 
+          <el-table-column label="操作" align="center">
             <template slot-scope="scope">
               <el-button @click="exchange(scope.row)">交换</el-button>
             </template>
@@ -84,7 +84,10 @@
 
 <script>
 import $ from 'jquery'
+import _ from 'lodash'
+
 export default {
+  inject:['websocketsend'],
   data() {
     return {
       itemList: [],
@@ -141,13 +144,46 @@ export default {
       const { data: res } = await this.$http.get(this.$global.globalUrl + `8083/api/item/generate`, {
         params: { value: item.value },
       })
-      if(res.isSuccess !== true) {
+      if (res.isSuccess !== true) {
         return this.$message.info('您暂时没有可交换的物品')
       }
       this.exchangeableItems = res.data
     },
-    exchange(item){
-      console.log(item)
+    exchange(item) {
+      this.$confirm('是否确认交换改物品?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          const itemCpoy = _.cloneDeep(item)
+          const currentItemCopy = _.cloneDeep(this.currentItem)
+          currentItemCopy.imgs = JSON.stringify(currentItemCopy.imgs)
+          let actions = {
+            type: 'notice',
+            sender: this.userInfo.id,
+            receiver: this.currentItem.ownerId,
+            content: {
+              activePartyItem: itemCpoy,
+              passivePartyItem: currentItemCopy,
+            },
+          }
+          this.sendMessage(JSON.stringify(actions))
+          this.$message({
+            type: 'success',
+            message: '发送交换请求成功!',
+          })
+        })
+        .catch((e) => {
+          console.log(e);
+          this.$message({
+            type: 'info',
+            message: '已取消发送交换请求',
+          })
+        })
+    },
+    sendMessage(Data) {
+      this.websocketsend(Data)
     }
   },
 }
