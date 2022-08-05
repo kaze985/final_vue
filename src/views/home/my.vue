@@ -108,7 +108,6 @@ export default {
     },
     handleChange(file, fileList) {
       this.fileList = fileList
-      console.log(fileList)
 
     },
     showEditItem(item) {

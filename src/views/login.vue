@@ -86,7 +86,6 @@ export default {
           }),
           { withCredentials: true }
         )
-        console.log(res)
 
         if (res.code === '605') {
           return this.$message.error('验证码不正确')

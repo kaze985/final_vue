@@ -16,7 +16,7 @@
       <el-container>
         <!-- 侧边栏 -->
         <el-aside>
-          <el-menu class="el-menu-vertical-demo" router>
+          <el-menu class="el-menu-vertical-demo" router :default-active="this.$route.path.replace('/', '')">
             <el-menu-item index="item">
               <i class="el-icon-menu"></i>
               <span slot="title">物品列表</span>
@@ -51,7 +51,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -116,16 +115,19 @@ export default {
     websocketonopen() {
       console.log('建立连接成功')
     },
-    websocketonerror() {
+    websocketonerror(e) {
       // 连接建立失败重连
       console.log('出现错误')
-      this.initWebSocket()
+      console.log(e)
+      // this.initWebSocket()
     },
     websocketonmessage(res) {
       // 数据接收
       const redata = JSON.parse(res.data)
-      if (redata.type == 'notice') {
+      if (redata.type == 'notice' && redata.content.status == 'EXCHANGING') {
         unReadMessage.push(redata)
+      } else {
+        returnMessage = redata
       }
     },
     websocketsend(Data) {
@@ -140,6 +142,7 @@ export default {
   },
 }
 export let unReadMessage = []
+export let returnMessage = {}
 </script>
 
 <style lang="scss">

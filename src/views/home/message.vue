@@ -7,17 +7,17 @@
 
     <el-card>
       <h2 v-if="unReadMsg.length == 0" style="color: #99a9bf">暂无交换请求</h2>
-      <el-card class="request" v-for="msg in unReadMsg" :key="msg.content.id" :v-if="msg.content.status == 'EXCHANGING'">
+      <el-card class="request" v-for="msg in unReadMsg" :key="msg.content.id">
         <div class="title">
           <b>{{ msg.content.activePartyItem.ownerName }}</b> 请求交换
         </div>
         <el-row>
           <el-col :span="10" class="item-box">
             <el-row>
-              <el-col class="img" :span="12">
+              <el-col class="img" :span="14">
                 <img :src="JSON.parse(msg.content.activePartyItem.imgs)[0]" alt="" class="cover" />
               </el-col>
-              <el-col class="info" :span="12">
+              <el-col class="info" :span="10">
                 <div class="name">物品名称：{{ msg.content.activePartyItem.name }}</div>
                 <div class="owner">拥有者：{{ msg.content.activePartyItem.ownerName }}</div>
                 <div class="value">
@@ -35,10 +35,10 @@
 
           <el-col :span="10" class="item-box">
             <el-row>
-              <el-col class="img" :span="12">
+              <el-col class="img" :span="14">
                 <img :src="JSON.parse(msg.content.passivePartyItem.imgs)[0]" alt="" class="cover" />
               </el-col>
-              <el-col class="info" :span="12">
+              <el-col class="info" :span="10">
                 <div class="name">物品名称：{{ msg.content.passivePartyItem.name }}</div>
                 <div class="owner">拥有者：{{ msg.content.passivePartyItem.ownerName }}</div>
                 <div class="value">
@@ -55,6 +55,7 @@
 
 <script>
 import { unReadMessage } from './index.vue'
+import { returnMessage } from './index.vue'
 import _ from 'lodash'
 
 export default {
@@ -64,58 +65,85 @@ export default {
       unReadMsg: unReadMessage,
     }
   },
-  mounted() {
-    console.log(this.unReadMsg)
-  },
   methods: {
     confirm(msg) {
       this.$confirm('请确认是否与其进行交换', '提示', {
         confirmButtonText: '确定交换',
         cancelButtonText: '再考虑考虑',
         type: 'warning',
-      }).then(() => {
-        let actions = _.cloneDeep(msg)
-        actions.type = 'agree'
-        console.log(actions)
-        this.sendMessage(JSON.stringify(actions))
-        const index = this.unReadMsg.indexOf(msg)
-        this.unReadMsg.splice(index, 1)
-        this.$message({
-          type: 'success',
-          message: '已成功交换!',
+      })
+        .then(() => {
+          let actions = {
+            type: 'agree',
+            sender: msg.receiver,
+            content: {
+              id: msg.content.id,
+              activePartyItem: msg.content.activePartyItem,
+              passivePartyItem: msg.content.passivePartyItem,
+            },
+          }
+          this.sendMessage(JSON.stringify(actions))
+          let _this = this
+          const loading = this.$loading({
+            lock: true,
+            text: '正在交换中',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)',
+          })
+          setTimeout(function () {
+            _this.removeMsg(msg)
+            loading.close();
+          }, 3000)
         })
-      }).catch(() => {
+        .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消该操作'
-          });          
-        });
+            message: '已取消该操作',
+          })
+        })
     },
     reject(msg) {
       this.$confirm('请确认是否拒绝与其进行交换', '提示', {
         confirmButtonText: '拒绝交换',
         cancelButtonText: '再考虑考虑',
         type: 'warning',
-      }).then(() => {
-        let actions = _.cloneDeep(msg)
-        actions.type = 'agrrejectee'
-        console.log(actions)
-        this.sendMessage(JSON.stringify(actions))
-        const index = this.unReadMsg.indexOf(msg)
-        this.unReadMsg.splice(index, 1)
-        this.$message({
-          type: 'success',
-          message: '已拒绝交换!',
-        }).catch(() => {
+      })
+        .then(() => {
+          let actions = {
+            type: 'reject',
+            sender: msg.receiver,
+            content: {
+              id: msg.content.id,
+              activePartyItem: msg.content.activePartyItem,
+              passivePartyItem: msg.content.passivePartyItem,
+            },
+          }
+          this.sendMessage(JSON.stringify(actions))
+          this.$message({
+            type: 'success',
+            message: '已拒绝交换!',
+          })
+          this.$router.go(0)
+        })
+        .catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消该操作'
-          });          
-        });
-      })
+            message: '已取消该操作',
+          })
+        })
     },
     sendMessage(Data) {
       this.websocketsend(Data)
+    },
+    removeMsg(msg) {
+      if (returnMessage.type == 'error') {
+        this.$message.error('交换失败，物品中的一方已经被交换')
+        this.errorMsg = {}
+      } else {
+        this.$message.success('交换成功')
+      }
+      const index = this.unReadMsg.indexOf(msg)
+      this.unReadMsg.splice(index, 1)
     },
   },
 }
@@ -136,7 +164,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-}
+}fullscreenLoading
 .item-box {
   padding: 10px;
 }

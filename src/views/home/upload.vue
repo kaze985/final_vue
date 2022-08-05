@@ -20,19 +20,8 @@
           <el-input v-model="uploadForm.intro"></el-input>
         </el-form-item>
 
-        <el-form-item>
-          <el-upload
-            class="upload-demo"
-            drag
-            action="#"
-            multiple
-            :auto-upload="false"
-            ref="uploadRef"
-            :on-change="handleChange"
-            :on-remove="handleRemove"
-            :fileList="fileList"
-            list-type="picture"
-          >
+        <el-form-item prop="imgs">
+          <el-upload class="upload-demo" drag action="#" multiple :auto-upload="false" ref="uploadRef" :on-change="handleChange" :on-remove="handleRemove" :fileList="fileList" list-type="picture">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -47,6 +36,15 @@
 <script>
 export default {
   data() {
+    let validateImage = (rule, value, callback) => {
+      //验证器
+      if (this.fileList.length == 0) {
+        //为true代表图片在  false报错
+        callback(new Error('请上传图片'))
+      } else {
+        callback()
+      }
+    }
     return {
       uploadForm: {
         name: '',
@@ -58,6 +56,7 @@ export default {
         name: [{ required: true, message: '物品名称不能为空', trigger: 'blur' }],
         value: [{ required: true, message: '物品价格不能为空', trigger: 'blur' }],
         intro: [{ required: true, message: '简介不能为空', trigger: 'blur' }],
+        imgs: [{ required: true, validator: validateImage, trigger: 'change' }],
       },
       fileList: [],
     }
@@ -68,7 +67,6 @@ export default {
         if (!valid) {
           return
         }
-        console.log(this.uploadForm)
         const formData = new FormData()
         formData.append('name', this.uploadForm.name)
         formData.append('value', this.uploadForm.value - 0.0)
@@ -81,19 +79,18 @@ export default {
           headers: { 'Content-Type': 'multipart/form-data' },
           timeout: 20000,
         })
-        if(res.isSuccess !== true) {
+        if (res.isSuccess !== true) {
           return this.$message.error('上传失败')
         }
         this.$message.success('上传成功')
         this.$router.push('/item')
       })
     },
-    handleRemove(file,fileList) {
+    handleRemove(file, fileList) {
       this.fileList = fileList
     },
-    handleChange(file,fileList) {
+    handleChange(file, fileList) {
       this.fileList = fileList
-      console.log(fileList)
     },
   },
 }
