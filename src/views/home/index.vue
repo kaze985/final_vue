@@ -113,13 +113,12 @@ export default {
       this.websock.onclose = this.websocketclose
     },
     websocketonopen() {
-      console.log('建立连接成功')
+      this.$message.success('已成功建立连接')
     },
     websocketonerror(e) {
       // 连接建立失败重连
-      console.log('出现错误')
-      console.log(e)
-      // this.initWebSocket()
+      this.$message.error('连接出错，正在重新发起连接')
+      this.initWebSocket()
     },
     websocketonmessage(res) {
       // 数据接收
@@ -131,13 +130,15 @@ export default {
       }
     },
     websocketsend(Data) {
-      console.log('调用发送数据')
       // 数据发送
       this.websock.send(Data)
     },
     websocketclose(e) {
       // 关闭
-      console.log('断开连接', e)
+      this.$notify({
+        title: '连接已断开',
+        message: h('i', { style: 'color: teal'}, '请尝试刷新页面或等待服管理猿修复BUG')
+      });
     },
   },
 }
@@ -145,7 +146,7 @@ export let unReadMessage = []
 export let returnMessage = {}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .home {
   height: 100%;
 }

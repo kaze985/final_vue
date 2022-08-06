@@ -106,7 +106,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #index {
   height: 100%;
   background: #93defd;

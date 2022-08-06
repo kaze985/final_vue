@@ -56,6 +56,7 @@
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+            <div class="el-upload__tip" slot="tip">若不重新上传图片，则保持原图片列表</div>
           </el-upload>
         </el-form-item>
         <el-button type="primary" @click="edit">点击修改</el-button>
@@ -76,9 +77,18 @@ export default {
       currentItem: {},
       fileList: [],
       uploadRules: {
-        name: [{ required: true, message: '物品名称不能为空', trigger: 'blur' }],
-        value: [{ required: true, message: '物品价格不能为空', trigger: 'blur' }],
-        intro: [{ required: true, message: '简介不能为空', trigger: 'blur' }],
+        name: [
+          { required: true, message: '物品名称不能为空', trigger: 'blur' },
+          { min: 1, max: 64, message: '名称长度需要在 1 - 64 字数之间', trigger: 'blur' }
+        ],
+        value: [
+          { required: true, message: '物品价格不能为空', trigger: 'blur' },
+          { min: 1, max: 10, message: '价格在 1 - 8 位之间', trigger: 'blur' }
+        ],
+        intro: [
+          { required: true, message: '简介不能为空', trigger: 'blur' }
+          { min: 1, max: 256, message: '简介长度需要在 1 - 256 个字数之间', trigger: 'blur' }
+        ],
       },
       uploadForm: {
         id:'',
@@ -172,7 +182,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped="scope">
+<style lang="scss" scoped>
 .el-carousel__item {
   background-color: #eee;
   height: 250px;

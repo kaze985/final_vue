@@ -188,7 +188,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .item-cover {
   height: 100px;
   margin: 0 auto;

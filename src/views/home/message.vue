@@ -149,7 +149,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .cover {
   height: 100px;
 }
