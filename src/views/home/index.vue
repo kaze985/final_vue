@@ -57,7 +57,6 @@ export default {
       userInfo: null,
       menuList: [],
       isCollapse: false,
-      // wsUrl: 'ws://127.0.0.1:8084/websocket/', // ws地址
       wsUrl: 'ws://https://user-2010755-1309556468.ap-shanghai.run.tcloudbase.com/websocket/', // ws地址
       websock: null, // ws实例
       unReadMessage: unReadMessage,
@@ -85,8 +84,7 @@ export default {
         type: 'warning',
       })
         .then(async () => {
-          // const { data: res } = await this.$http.get(`http://182.92.185.137:8082/api/user/logout`)
-          const { data: res } = await this.$http.get(this.$global.globalUrl + `/api/user/logout`)
+          const { data: res } = await this.$http.get(`/api/user/logout`)
           if (res.isSuccess !== true) {
             return this.$message.error('退出失败')
           }

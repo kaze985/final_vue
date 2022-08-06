@@ -109,8 +109,7 @@ export default {
   },
   methods: {
     async getitemList() {
-      // const { data: res } = await this.$http.post(this.$global.globalUrl + `8083/api/item/show`, {
-      const { data: res } = await this.$http.post(this.$global.globalUrl + `/api/item/show`, {
+      const { data: res } = await this.$http.post(`/api/item/show`, {
         pageNum: this.pageInfo.pageNum,
         pageSize: this.pageInfo.pageSize,
       })
@@ -142,7 +141,7 @@ export default {
     async showExchange(item) {
       this.currentItem = item
       this.exchangeDialogVisible = true
-      const { data: res } = await this.$http.get(this.$global.globalUrl + `8083/api/item/generate`, {
+      const { data: res } = await this.$http.get(`/api/item/generate`, {
         params: { value: item.value },
       })
       if (res.isSuccess !== true) {

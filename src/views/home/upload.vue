@@ -75,8 +75,7 @@ export default {
           formData.append('imgs', item.raw)
         })
 
-        // const { data: res } = await this.$http.post(this.$global.globalUrl + `8083/api/item/upload`, formData, {
-        const { data: res } = await this.$http.post(this.$global.globalUrl + `/api/item/upload`, formData, {
+        const { data: res } = await this.$http.post(`/api/item/upload`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
           timeout: 20000,
         })

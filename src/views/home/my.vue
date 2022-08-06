@@ -94,8 +94,7 @@ export default {
   },
   methods: {
     async getMyitemList() {
-      // const { data: res } = await this.$http.get(this.$global.globalUrl + `8083/api/item/myitems`)
-      const { data: res } = await this.$http.get(this.$global.globalUrl + `/api/item/myitems`)
+      const { data: res } = await this.$http.get(`/api/item/myitems`)
       if (res.isSuccess === false) {
         return this.$message.info('您暂时没有上传物品')
       }
@@ -130,8 +129,7 @@ export default {
           formData.append('imgs', item.raw)
         })
 
-        // const { data: res } = await this.$http.post(this.$global.globalUrl + `8083/api/item/update`, formData, {
-        const { data: res } = await this.$http.post(this.$global.globalUrl + `/api/item/update`, formData, {
+        const { data: res } = await this.$http.post(`/api/item/update`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
           timeout: 20000,
         })
@@ -152,8 +150,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        // const { data: res } = await this.$http.get(this.$global.globalUrl + `8083/api/item/delete`,{
-        const { data: res } = await this.$http.get(this.$global.globalUrl + `/api/item/delete`,{
+        const { data: res } = await this.$http.get(`/api/item/delete`,{
           params:{itemId:id}
         })
         if(res.isSuccess === false) {
