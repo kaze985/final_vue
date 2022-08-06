@@ -12,7 +12,7 @@ import './assets/css/global.scss'
 import axios from 'axios';
 axios.defaults.headers['Cross-Method'] = 'CORS'
 axios.defaults.withCredentials=true
-axios.defaults.baseURL = "https://user-2010755-1309556468.ap-shanghai.run.tcloudbase.com"
+axios.defaults.baseURL = "http://final.lppnb.top"
 axios.interceptors.request.use(config => {
   config.headers.Authorization =  'cookie' 
   return config
