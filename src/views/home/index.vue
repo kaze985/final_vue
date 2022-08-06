@@ -57,7 +57,7 @@ export default {
       userInfo: null,
       menuList: [],
       isCollapse: false,
-      wsUrl: 'wss://exchange-prod-7gcbt0vgdd0f6605-1309556468.ap-shanghai.run.wxcloudrun.com', // ws地址
+      wsUrl: 'wss://exchange-prod-7gcbt0vgdd0f6605-1309556468.ap-shanghai.run.wxcloudrun.com/websocket/', // ws地址
       websock: null, // ws实例
       unReadMessage: unReadMessage,
     }
