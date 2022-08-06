@@ -23,7 +23,6 @@ Vue.prototype.$http = axios
 import qs from 'qs'
 Vue.prototype.$qs = qs
 
-
 new Vue({
   router,
   render: h => h(App)
