@@ -6,7 +6,7 @@
     </el-breadcrumb>
 
     <el-card>
-      <h2 v-if="unReadMsg.length == 0" style="color: #99a9bf">暂无交换请求</h2>
+      <el-empty description="暂无交换请求" v-if="unReadMsg.length == 0"></el-empty>
       <el-card class="request" v-for="msg in unReadMsg" :key="msg.content.id">
         <div class="title">
           <b>{{ msg.content.activePartyItem.ownerName }}</b> 请求交换
