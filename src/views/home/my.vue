@@ -86,7 +86,7 @@ export default {
           { min: 1, max: 10, message: '价格在 1 - 8 位之间', trigger: 'blur' }
         ],
         intro: [
-          { required: true, message: '简介不能为空', trigger: 'blur' }
+          { required: true, message: '简介不能为空', trigger: 'blur' },
           { min: 1, max: 256, message: '简介长度需要在 1 - 256 个字数之间', trigger: 'blur' }
         ],
       },
