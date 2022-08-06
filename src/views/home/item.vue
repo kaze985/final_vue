@@ -174,7 +174,7 @@ export default {
             message: '发送交换请求成功!',
           })
         })
-        .catch((e) => {
+        .catch(() => {
           this.$message({
             type: 'info',
             message: '已取消发送交换请求',

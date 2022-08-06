@@ -57,8 +57,8 @@ export default {
       userInfo: null,
       menuList: [],
       isCollapse: false,
-      wsUrl: 'wss://exchange-prod-7gcbt0vgdd0f6605-1309556468.ap-shanghai.run.wxcloudrun.com/websocket/', // ws地址
-      websock: null, // ws实例
+      websockUrl: 'websocks://exchange-prod-7gcbt0vgdd0f6605-1309556468.ap-shanghai.run.wxcloudrun.com/websocket/', // websock地址
+      websock: null, // websock实例
       unReadMessage: unReadMessage,
       lockReconnect: false, //是否真正建立连接
       timeout: 30 * 1000, //30秒一次心跳
@@ -109,7 +109,7 @@ export default {
     },
     initWebSocket() {
       this.userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-      let socketUrl = this.wsUrl + this.userInfo.id
+      let socketUrl = this.websockUrl + this.userInfo.id
       if (typeof WebSocket === 'undefined') return console.log('您的浏览器不支持websocket')
       this.websock = new WebSocket(socketUrl)
       this.websock.onmessage = this.websocketonmessage
@@ -122,7 +122,7 @@ export default {
       //开启心跳
       this.start()
     },
-    websocketonerror(e) {
+    websocketonerror() {
       // 连接建立失败重连
       this.$message.error('连接出错，正在重新发起连接')
       // this.initWebSocket()
@@ -184,16 +184,16 @@ export default {
       self.serverTimeoutObj && clearTimeout(self.serverTimeoutObj)
       self.timeoutObj = setTimeout(function () {
         //这里发送一个心跳，后端收到后，返回一个心跳消息，
-        if (self.ws.readyState == 1) {
+        if (self.websock.readyState == 1) {
           //如果连接正常
-          self.ws.send('heartCheck')
+          self.websock.send('1')
         } else {
           //否则重连
           self.reconnect()
         }
         self.serverTimeoutObj = setTimeout(function () {
           //超时关闭
-          self.ws.close()
+          self.websock.close()
         }, self.timeout)
       }, self.timeout)
     },

@@ -56,7 +56,6 @@
 <script>
 import { unReadMessage } from './index.vue'
 import { returnMessage } from './index.vue'
-import _ from 'lodash'
 
 export default {
   inject: ['websocketsend'],
