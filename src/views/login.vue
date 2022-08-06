@@ -32,7 +32,6 @@
 </template>
 
 <script>
-// import { response } from 'express'
 import $ from 'jquery'
 export default {
   data() {
@@ -78,7 +77,8 @@ export default {
         }
 
         const { data: res } = await this.$http.post(
-          `/api/user/login`,
+          `/api/user/login`, // 线上
+          // `http://127.0.0.1:8082/api/user/login`, // 本地
           this.$qs.stringify({
             userName: this.loginForm.userName,
             pwd: this.loginForm.pwd,
@@ -98,7 +98,8 @@ export default {
       })
     },
     async getCode() {
-      const res = await this.$http.get(`/createCode`, { responseType: 'arraybuffer' , withCredentials:true})
+      const res = await this.$http.get(`/createCode`, { responseType: 'arraybuffer' , withCredentials:true}) // 线上
+      // const res = await this.$http.get(`http://127.0.0.1:8082/createCode`, { responseType: 'arraybuffer' , withCredentials:true}) // 本地
       const data = 'data:image/png;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), ''))
       $('#codeImage').attr('src', data)
     },

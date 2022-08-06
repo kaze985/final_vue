@@ -104,7 +104,8 @@ export default {
   },
   methods: {
     async getMyitemList() {
-      const { data: res } = await this.$http.get(`/api/item/myitems`)
+      const { data: res } = await this.$http.get(`/api/item/myitems`) // 线上
+      // const { data: res } = await this.$http.get(`http://127.0.0.1:8083/api/item/myitems`) // 本地
       if (res.isSuccess === false) {
         return this.$message.info('您暂时没有上传物品')
       }
@@ -139,7 +140,10 @@ export default {
           formData.append('imgs', item.raw)
         })
 
-        const { data: res } = await this.$http.post(`/api/item/update`, formData, {
+        const { data: res } = await this.$http.post(
+          `/api/item/update`, // 线上
+          // `http://127.0.0.1:8083/api/item/update`, // 本地
+          formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
           timeout: 20000,
         })
@@ -160,7 +164,10 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async () => {
-        const { data: res } = await this.$http.get(`/api/item/delete`,{
+        const { data: res } = await this.$http.get(
+          `/api/item/delete`, // 线上
+          // `http://127.0.0.1:8083/api/item/delete`, // 本地
+          {
           params:{itemId:id}
         })
         if(res.isSuccess === false) {

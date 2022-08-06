@@ -104,7 +104,8 @@ export default {
         }
         
         const { data: res } = await this.$http.post(
-          `/api/user/reg`,
+          `/api/user/reg`, // 线上
+          // `http://127.0.0.1:8082/api/user/reg`, // 本地
           this.$qs.stringify({
             userName: this.registerForm.userName,
             pwd: this.registerForm.pwd,

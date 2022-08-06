@@ -109,7 +109,10 @@ export default {
   },
   methods: {
     async getitemList() {
-      const { data: res } = await this.$http.post(`/api/item/show`, {
+      const { data: res } = await this.$http.post(
+        `/api/item/show`, // 线上
+        // `http://127.0.0.1:8083/api/item/show`, // 本地
+      {
         pageNum: this.pageInfo.pageNum,
         pageSize: this.pageInfo.pageSize,
       })
@@ -141,7 +144,10 @@ export default {
     async showExchange(item) {
       this.currentItem = item
       this.exchangeDialogVisible = true
-      const { data: res } = await this.$http.get(`/api/item/generate`, {
+      const { data: res } = await this.$http.get(
+        `/api/item/generate`, // 线上
+        // `http://127.0.0.1:8083/api/item/generate`, // 本地
+      {
         params: { value: item.value },
       })
       if (res.isSuccess !== true) {

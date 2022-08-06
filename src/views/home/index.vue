@@ -57,7 +57,8 @@ export default {
       userInfo: null,
       menuList: [],
       isCollapse: false,
-      websockUrl: 'websocks://exchange-prod-7gcbt0vgdd0f6605-1309556468.ap-shanghai.run.wxcloudrun.com/websocket/', // websock地址
+      websockUrl: 'ws://exchange-prod-7gcbt0vgdd0f6605-1309556468.ap-shanghai.run.wxcloudrun.com/websocket/', // 线上websock地址
+      // websockUrl: 'ws://127.0.0.1:8084/websocket/', // 本地websock地址
       websock: null, // websock实例
       unReadMessage: unReadMessage,
       lockReconnect: false, //是否真正建立连接
@@ -89,7 +90,8 @@ export default {
         type: 'warning',
       })
         .then(async () => {
-          const { data: res } = await this.$http.get(`/api/user/logout`)
+          // const { data: res } = await this.$http.get(`/api/user/logout`) // 线上
+          const { data: res } = await this.$http.get(`http://127.0.0.1:8082/api/user/logout`) // 线下
           if (res.isSuccess !== true) {
             return this.$message.error('退出失败')
           }
@@ -146,9 +148,10 @@ export default {
     },
     websocketclose() {
       // 关闭
-      this.$notify({
+      this.$notify.error({
         title: '连接已断开',
         message: '请尝试刷新页面或等待服管理猿修复BUG',
+        position: 'bottom-left',
       })
       //重连
       this.reconnect()
@@ -164,7 +167,7 @@ export default {
       that.timeoutnum && clearTimeout(that.timeoutnum)
       that.timeoutnum = setTimeout(function () {
         //新连接
-        that.initWebpack()
+        that.initWebSocket()
         that.lockReconnect = false
       }, 5000)
     },

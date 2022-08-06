@@ -84,7 +84,11 @@ export default {
           formData.append('imgs', item.raw)
         })
 
-        const { data: res } = await this.$http.post(`/api/item/upload`, formData, {
+        const { data: res } = await this.$http.post(
+          `/api/item/upload`, // 线上
+          // `http://127.0.0.1:8083/api/item/upload`, // 本地
+          formData,
+           {
           headers: { 'Content-Type': 'multipart/form-data' },
           timeout: 20000,
         })
