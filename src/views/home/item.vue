@@ -109,7 +109,8 @@ export default {
   },
   methods: {
     async getitemList() {
-      const { data: res } = await this.$http.post(this.$global.globalUrl + `8083/api/item/show`, {
+      // const { data: res } = await this.$http.post(this.$global.globalUrl + `8083/api/item/show`, {
+      const { data: res } = await this.$http.post(this.$global.globalUrl + `/api/item/show`, {
         pageNum: this.pageInfo.pageNum,
         pageSize: this.pageInfo.pageSize,
       })

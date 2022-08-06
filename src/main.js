@@ -4,20 +4,16 @@ import router from './router'
 import './plugins/element.js'
 
 Vue.config.productionTip = false
-Vue.config.port = 8082
 
 // 导入全局样式表
 import './assets/css/global.scss'
-// 导入全局js
-import global from './assets/js/global'
-Vue.prototype.$global = global
 
 // 导入axios
 import axios from 'axios';
 axios.defaults.headers['Cross-Method'] = 'CORS'
 axios.defaults.withCredentials=true
+axios.defaults.baseURL = "https://user-2010755-1309556468.ap-shanghai.run.tcloudbase.com"
 axios.interceptors.request.use(config => {
-  // console.log(config)
   config.headers.Authorization =  'cookie' 
   return config
 })
@@ -26,11 +22,6 @@ Vue.prototype.$http = axios
 // 导入qs类库
 import qs from 'qs'
 Vue.prototype.$qs = qs
-
-// 导入vue-cookies库
-import VueCookies from 'vue-cookies';
-Vue.prototype.$cookies = VueCookies
-Vue.use(VueCookies)
 
 
 new Vue({

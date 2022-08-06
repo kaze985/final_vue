@@ -78,7 +78,7 @@ export default {
         }
 
         const { data: res } = await this.$http.post(
-          this.$global.globalUrl + `8082/api/user/login`,
+          `/api/user/login`,
           this.$qs.stringify({
             userName: this.loginForm.userName,
             pwd: this.loginForm.pwd,
@@ -98,7 +98,7 @@ export default {
       })
     },
     async getCode() {
-      const res = await this.$http.get(this.$global.globalUrl + `8082/createCode`, { responseType: 'arraybuffer' , withCredentials:true})
+      const res = await this.$http.get(`/createCode`, { responseType: 'arraybuffer' , withCredentials:true})
       const data = 'data:image/png;base64,' + btoa(new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), ''))
       $('#codeImage').attr('src', data)
     },

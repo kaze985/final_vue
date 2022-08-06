@@ -104,7 +104,8 @@ export default {
         }
         
         const { data: res } = await this.$http.post(
-          this.$global.globalUrl + `8082/api/user/reg`,
+          // this.$global.globalUrl + `8082/api/user/reg`,
+          this.$global.globalUrl + `/api/user/reg`,
           this.$qs.stringify({
             userName: this.registerForm.userName,
             pwd: this.registerForm.pwd,
