@@ -185,7 +185,7 @@ export default {
       var self = this
       self.timeoutObj && clearTimeout(self.timeoutObj)
       self.serverTimeoutObj && clearTimeout(self.serverTimeoutObj)
-      self.timeoutObj = setTimeout(function () {
+      self.timeoutObj = setInterval(function () {
         //这里发送一个心跳，后端收到后，返回一个心跳消息，
         if (self.websock.readyState == 1) {
           //如果连接正常
@@ -194,10 +194,6 @@ export default {
           //否则重连
           self.reconnect()
         }
-        self.serverTimeoutObj = setTimeout(function () {
-          //超时关闭
-          self.websock.close()
-        }, self.timeout)
       }, self.timeout)
     },
   },
